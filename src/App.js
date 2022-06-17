@@ -42,7 +42,7 @@ class ModelObject {
 }
 
 export function App() {
-  const [value, setValue] = useState("T(0,0,2) S(1,2,1) I('cube')");
+  const [value, setValue] = useState("T(0,0,0) S(1,2,1) I('cube')");
   const [shapesOnCanvas,setShapesOnCanvas] = useState([]);
 
   function Shape(props) {
@@ -234,7 +234,7 @@ export function App() {
             <TextField
               id="outlined-textarea"
               label="Write CGA rules"
-              placeholder="Ex: T(0,0,2) S(1,2,1) I('cube')"
+              placeholder="Ex: T(0,0,0) S(1,2,1) I('cube')"
               value={value}
               onChange={(e) => {
                 setValue(e.target.value);
