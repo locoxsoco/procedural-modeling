@@ -46,8 +46,7 @@ export function App() {
   const [shapesOnCanvas,setShapesOnCanvas] = useState([]);
 
   function Shape(props) {
-    scene = useThree(state => state.scene);  
-    //const colorMap = useLoader(TextureLoader, texture);
+    scene = useThree(state => state.scene);
     //console.log(props.shape);
 
     const allShapes= {
@@ -74,8 +73,8 @@ export function App() {
     const exporter = new PLYExporter();
     exporter.parse(scene, function (plyJson) {
       //console.log(plyJson);
-      /*const jsonString = JSON.stringify(plyJson);
-      console.log(jsonString);*/
+      //const jsonString = JSON.stringify(plyJson);
+      //console.log(jsonString);
       const blob = new Blob([plyJson], { type: "application/json" });
       saveAs(blob, "cga-model.ply");
       //console.log("Download requested");
