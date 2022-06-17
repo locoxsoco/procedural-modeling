@@ -1,6 +1,7 @@
 import React, {Suspense, useState } from "react";
 import './App.css';
 import * as THREE from "three";
+import { PLYExporter } from "three/examples/jsm/exporters/PLYExporter";
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -9,28 +10,42 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
-import {Canvas} from "@react-three/fiber";
+import {Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-//import CGA from "./components/CGA";
-
-function CGA() {
-  //const colorMap = useLoader(TextureLoader, texture);
-
-  return (
-    <mesh rotation={[90, 0, 20]}>
-      <boxBufferGeometry attach="geometry" args={[3, 3, 3]} />
-      <meshNormalMaterial attach="material" />
-      {/* <meshStandardMaterial map={colorMap} /> */}
-    </mesh>
-  );
-}
+import { saveAs } from "file-saver";
 
 const mdTheme = createTheme();
+let scene;
 
 export function App() {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState("T(0,0,6) S(8,10,18) I('cube')");
+
+  function CGA() {
+    scene = useThree(state => state.scene);  
+    //const colorMap = useLoader(TextureLoader, texture);
+  
+    return (
+      <mesh rotation={[90, 0, 20]}>
+        <boxBufferGeometry attach="geometry" args={[3, 3, 3]} />
+        <meshNormalMaterial attach="material" />
+        {/* <meshStandardMaterial map={colorMap} /> */}
+      </mesh>
+    );
+  }
+
+  function downloadFile() {
+    const exporter = new PLYExporter();
+    exporter.parse(scene, function (plyJson) {
+      //console.log(plyJson);
+      /*const jsonString = JSON.stringify(plyJson);
+      console.log(jsonString);*/
+      const blob = new Blob([plyJson], { type: "application/json" });
+      saveAs(blob, "cga-model.ply");
+      //console.log("Download requested");
+    }, { binary: false });
+  }
 
   function processCGAScript(){
     console.log(value);
@@ -56,7 +71,7 @@ export function App() {
             <TextField
               id="outlined-textarea"
               label="Write CGA rules"
-              placeholder="Ex: T(0,0,6) S(8,10,18) I(”cube”)"
+              placeholder="Ex: T(0,0,6) S(8,10,18) I('cube')"
               value={value}
               onChange={(e) => {
                 setValue(e.target.value);
@@ -110,7 +125,12 @@ export function App() {
                   <span>Scale: S(8,10,18)</span>
                 </Stack>
               </Typography>
-              <Button variant="contained">Export</Button>
+              <Button
+                variant="contained"
+                onClick={downloadFile}
+              >
+                Export
+              </Button>
             </Paper>              
           </Grid>
         </Grid>
