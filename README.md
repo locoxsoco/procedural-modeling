@@ -25,6 +25,8 @@ In this example, the Rotation operation will only be applied to the cube and the
 - Rotation: T(0,0,0)
 - Scale: T(1,1,1)
 
+Once the syntax is correctly declared in the input text, pressing RUN! will generate the model. By pressing the EXPORT button, the generated model will be downloaded as a .ply file.
+
 ## Stack
 
 - ReactJS
