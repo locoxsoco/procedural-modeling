@@ -4,7 +4,7 @@ import { TextureLoader } from "three/src/loaders/TextureLoader";
 
 //import texture from "../images/map.jpg";
 
-export default function BoxMesh() {
+export default function CGA() {
   //const colorMap = useLoader(TextureLoader, texture);
 
   return (
