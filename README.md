@@ -17,7 +17,7 @@ As for the available objects to be used, these are:
 
 Currently, the geometric operations are independent between each other and is only applied to the right adjacent object declared. For example:
 
-*R(0,0,0)I('cube')T(2,0,0)I('sphere')*
+*R(0,90,0)I('cube')T(2,0,0)I('sphere')*
 
 In this example, the Rotation operation will only be applied to the cube and the Traslation operation to the sphere. The rotation is in domain [0,2*pi]. As for the operations not explicity declared for an object, the default parameters are as follows:
 
