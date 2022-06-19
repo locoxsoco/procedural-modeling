@@ -294,7 +294,7 @@ export function App() {
                 The geometric operations are:
                 <Stack spacing={0}>
                   <span>Traslation: T(0,0,2)</span>
-                  <span>Rotation: R(90,0,20)</span>
+                  <span>Rotation: R(0,90,0)</span>
                   <span>Scale: S(1,2,1)</span>
                 </Stack>
               </Typography>
