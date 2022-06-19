@@ -299,19 +299,19 @@ export function App() {
                 </Stack>
               </Typography>
               <Typography component="h5" >
-                Example 1:
+                Example 1 (The one shown in the slides):
               </Typography>
               <Typography component="h5" variant="h10" spacing={0} paragraph>
                 <span>T(3,6,8) S(4,4,4) I('sphere')T(3,0,8) S(4,8,4) I('cylinder')T(3,0,0) S(3.5,6.5,9) I('cube')T(0,0,3) S(4,5,9) I('cube')</span>
               </Typography>
               <Typography component="h5">
-                Example 2:
+                Example 2 (A barn):
               </Typography>
               <Typography component="h5" variant="h10" spacing={0} paragraph>
                 <span>T(0,1,2) S(2,1,2) I('cone')T(0,0,2) S(2,1,2) I('cylinder')T(6,1,2) S(2,1,2) I('cone')T(6,0,2) S(2,1,2) I('cylinder')T(3,-2,0)R(0,0,180) S(2,8,2) I('cylinder')T(0,0,0) S(8,2,2) I('cube')</span>
               </Typography>
               <Typography component="h5">
-                Example 3:
+                Example 3 (A Quidditch field):
               </Typography>
               <Typography component="h5" variant="h10" spacing={0} paragraph>
                 <span>T(8,0,2) S(2,1,10) I('cube')T(8,6,12) S(2,2,2) I('pyramid')T(8,0,12) S(2,6,2) I('cube') T(2,0,12) S(6,1,2) I('cube')T(0,6,12) S(2,2,2) I('pyramid')T(0,0,12) S(2,6,2) I('cube') T(0,0,2) S(2,1,10) I('cube')T(0,6,0) S(2,2,2) I('pyramid')T(0,0,0) S(2,6,2) I('cube') T(2,0,0) S(6,1,2) I('cube') T(8,6,0) S(2,2,2) I('pyramid')T(8,0,0) S(2,6,2) I('cube')</span>
