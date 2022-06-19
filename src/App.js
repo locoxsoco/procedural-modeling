@@ -11,7 +11,7 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import {Canvas, useThree } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls, Center } from "@react-three/drei";
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { saveAs } from "file-saver";
@@ -51,16 +51,23 @@ export function App() {
 
     const allShapes= {
       cube: new THREE.BoxGeometry( 1, 1, 1 ),
-      cylinder: new THREE.CylinderGeometry( 1, 1, 1, 32 ),
-      sphere : new THREE.SphereGeometry( 1, 32, 16 ),
-      cone : new THREE.ConeGeometry( 1, 1, 16 )
+      cylinder: new THREE.CylinderGeometry( 0.5, 0.5, 1, 32 ),
+      sphere : new THREE.SphereGeometry( 0.5, 32, 16 ),
+      cone : new THREE.ConeGeometry( 0.5, 1, 32 ),
+      pyramid : new THREE.ConeGeometry( 0.7071067811865475, 1, 4 )
     }
+
+    let position_x = props.shape.traslation_x + props.shape.scale_x/2.0;
+    let position_y = props.shape.traslation_y + props.shape.scale_y/2.0;
+    let position_z = props.shape.traslation_z + props.shape.scale_z/2.0;
+
+    let rotation_y = props.shape.model_type == 'pyramid' ? (props.shape.rotation_y+90)*3.14159192/360 : props.shape.rotation_y*3.14159192/360; 
   
     return (
       <mesh 
         {...props}
-        position={[props.shape.traslation_x,props.shape.traslation_y,props.shape.traslation_z]}
-        rotation={[props.shape.rotation_x*3.14159192/360,props.shape.rotation_y*3.14159192/360,props.shape.rotation_z*3.14159192/360]}
+        position={[position_x,position_y,position_z]}
+        rotation={[props.shape.rotation_x*3.14159192/360,rotation_y,props.shape.rotation_z*3.14159192/360]}
         scale={[props.shape.scale_x,props.shape.scale_y,props.shape.scale_z]}
       >
         <primitive object={allShapes[props.shape.model_type]} attach={"geometry"} />
@@ -153,7 +160,7 @@ export function App() {
           cur_rotation_z = 0;
         }
         cur_model_type = script.slice(cur_index+2,script.length-2);
-        if(cur_model_type == 'cube' || cur_model_type == 'cylinder' || cur_model_type == 'sphere' || cur_model_type == 'cone'){
+        if(cur_model_type == 'cube' || cur_model_type == 'cylinder' || cur_model_type == 'sphere' || cur_model_type == 'cone' || cur_model_type == 'pyramid'){
           //console.log('Model type:',cur_model_type);
           script = script.slice(0,cur_index);
         } else {
@@ -164,25 +171,25 @@ export function App() {
       } else if(script[cur_index-1] == 'T'){
         let traslation_script = script.slice(cur_index+1,script.length-1);
         const my_array = traslation_script.split(",");
-        cur_traslation_x = my_array[0];
-        cur_traslation_y = my_array[1];
-        cur_traslation_z = my_array[2];
+        cur_traslation_x = parseFloat(my_array[0]);
+        cur_traslation_y = parseFloat(my_array[1]);
+        cur_traslation_z = parseFloat(my_array[2]);
         //console.log('Traslation xyz:',cur_traslation_x,cur_traslation_y,cur_traslation_z);
         script = script.slice(0,cur_index);
       } else if(script[cur_index-1] == 'S'){
         let scale_script = script.slice(cur_index+1,script.length-1);
         const my_array = scale_script.split(",");
-        cur_scale_x = my_array[0];
-        cur_scale_y = my_array[1];
-        cur_scale_z = my_array[2];
+        cur_scale_x = parseFloat(my_array[0]);
+        cur_scale_y = parseFloat(my_array[1]);
+        cur_scale_z = parseFloat(my_array[2]);
         //console.log('Scale xyz:',cur_scale_x,cur_scale_y,cur_scale_z);
         script = script.slice(0,cur_index);
       } else if(script[cur_index-1] == 'R'){
         let rotation_script = script.slice(cur_index+1,script.length-1);
         const my_array = rotation_script.split(",");
-        cur_rotation_x = my_array[0];
-        cur_rotation_y = my_array[1];
-        cur_rotation_z = my_array[2];
+        cur_rotation_x = parseFloat(my_array[0]);
+        cur_rotation_y = parseFloat(my_array[1]);
+        cur_rotation_z = parseFloat(my_array[2]);
         //console.log('Rotation xyz:',cur_rotation_x,cur_rotation_y,cur_rotation_z);
         script = script.slice(0,cur_index);
       } else {
@@ -252,12 +259,15 @@ export function App() {
           </Grid>
           <Grid item xs={9}>
           <Canvas className="canvas">
+            <Center>
             <OrbitControls /*enableZoom={false}*/ />
             <ambientLight intensity={0.5} />
             <directionalLight position={[-2, 5, 2]} />
             <Suspense fallback={null}>
               {[...shapesOnCanvas]}
+              <primitive object={new THREE.AxesHelper(10)} />
             </Suspense>
+            </Center>
           </Canvas>
           </Grid>
           <Grid item xs={3}>
@@ -277,6 +287,7 @@ export function App() {
                   <span>Cube: I('cube')</span>
                   <span>Sphere: I('sphere')</span>
                   <span>Cylinder: I('cylinder')</span>
+                  <span>Square Pyramid: I('pyramid')</span>
                 </Stack>
               </Typography>                
               <Typography component="h5" paragraph>
@@ -291,13 +302,19 @@ export function App() {
                 Example 1:
               </Typography>
               <Typography component="h5" variant="h10" spacing={0} paragraph>
-                <span>T(2,2,0.5) S(1,1,1) I('sphere')T(2,-0.5,-2) S(2,3,5) I('cube')T(2,0,0.5) S(1,4,1) I('cylinder')T(0,-0.5,0) S(2,3,3) I('cube')</span>
+                <span>T(3,6,8) S(4,4,4) I('sphere')T(3,0,8) S(4,8,4) I('cylinder')T(3,0,0) S(3.5,6.5,9) I('cube')T(0,0,3) S(4,5,9) I('cube')</span>
               </Typography>
               <Typography component="h5">
                 Example 2:
               </Typography>
               <Typography component="h5" variant="h10" spacing={0} paragraph>
-                <span>T(3,0.5,2) S(1,1,1) I('cone')T(-3,-0.5,2) S(1,1,1) I('cylinder')T(-3,0.5,2) S(1,1,1) I('cone')T(3,-0.5,2) S(1,1,1) I('cylinder')T(0,1,0)R(0,0,180) S(1,8,1) I('cylinder')T(0,0,0) S(8,2,2) I('cube')</span>
+                <span>T(0,1,2) S(2,1,2) I('cone')T(0,0,2) S(2,1,2) I('cylinder')T(6,1,2) S(2,1,2) I('cone')T(6,0,2) S(2,1,2) I('cylinder')T(3,-2,0)R(0,0,180) S(2,8,2) I('cylinder')T(0,0,0) S(8,2,2) I('cube')</span>
+              </Typography>
+              <Typography component="h5">
+                Example 3:
+              </Typography>
+              <Typography component="h5" variant="h10" spacing={0} paragraph>
+                <span>T(8,0,2) S(2,1,10) I('cube')T(8,6,12) S(2,2,2) I('pyramid')T(8,0,12) S(2,6,2) I('cube') T(2,0,12) S(6,1,2) I('cube')T(0,6,12) S(2,2,2) I('pyramid')T(0,0,12) S(2,6,2) I('cube') T(0,0,2) S(2,1,10) I('cube')T(0,6,0) S(2,2,2) I('pyramid')T(0,0,0) S(2,6,2) I('cube') T(2,0,0) S(6,1,2) I('cube') T(8,6,0) S(2,2,2) I('pyramid')T(8,0,0) S(2,6,2) I('cube')</span>
               </Typography>
               <Button
                 variant="contained"
